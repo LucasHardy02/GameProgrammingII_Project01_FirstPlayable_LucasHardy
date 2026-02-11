@@ -8,11 +8,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
     internal class Map
     {
+
         static string _map = "Map.txt";
-        static string[] _mapLines = Array.Empty<string>();
+        public static string[] _mapLines = Array.Empty<string>();
 
         private int _mapHeight;
-
+        // used for x and y due to bprders.
+        public int _mapOffset = 1;
         public int MapHeight
         {
             get { return _mapHeight; }
@@ -25,26 +27,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             get { return _mapWidth; }
         }
 
-        static List<(int x, int y)> _goldList;
-        static char gold = '0';
-        static int _goldCount;
+        public int _lavaDamage = 25;
 
+        public List<(int x, int y)> _goldList;
+        public char gold = '0';
+        public int _goldCount;
 
-        static void DrawPlayer()
-        {
-            if (_playerHealth > 0)
-            {
-                Console.SetCursorPosition(_playerX + 1, _playerY + 1);
-                Console.ResetColor();
-
-                Console.SetCursorPosition(_playerX + 1, _playerY + 1);
-                Console.Write(_playerIcon);
-            }
-            else
-            {
-            }
-        }
-        public  void DisplayMap()
+        public void DisplayMap()
         {
 
             _mapHeight = _mapLines.Length;
@@ -83,7 +72,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 Console.Write(_topBottomBorder);
             }
         }
-        static void SetForegroundColor(char mapCharacter)
+        public void SetForegroundColor(char mapCharacter)
         {
             if (mapCharacter == '^')
             {
@@ -117,7 +106,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 Console.ResetColor();
             }
         }
-        static void RestoreMapTile(int x, int y)
+        public void RestoreMapTile(int x, int y)
         {
             char tile = _mapLines[y][x];
             Console.SetCursorPosition(x + 1, y + 1);
@@ -125,7 +114,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             Console.Write(tile);
         }
 
-        static void DrawGold()
+        public void DrawGold()
         {
             foreach (var g in _goldList)
             {

@@ -8,14 +8,17 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
 
             Map map = new Map();
             map.DisplayMap();
 
-            Player player = new Player(map);
-            player.PlayerMovement();
+            Player player = new Player(0,0);
+            player.Movement();
+            Enemy enemy = new Enemy(0,0);
+
         }
     }
 }

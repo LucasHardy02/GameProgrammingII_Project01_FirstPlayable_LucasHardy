@@ -6,17 +6,42 @@ using System.Threading.Tasks;
 
 namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
-    internal class Health
+    public class Health
     {
-        static int _health;
-        static int _maxHealth;
+        public int CurrentHealth { get; private set; }
+        public int Max { get; private set; }
         public bool _isAlive = true;
 
-        public Health(int health, int maxHealth)
+        public Health(int maxHealth)
         {
-            _health = health;
-            _maxHealth = maxHealth;
+            Max = maxHealth;
+            CurrentHealth = maxHealth;
         }
 
+        public void TakeDamage(int damageAmount)
+        {
+            CurrentHealth -= damageAmount;
+            if (CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                _isAlive = false;
+            }
+        }
+
+        public void Heal(int healAmount)
+        {
+            if (!_isAlive) return;
+
+            CurrentHealth += healAmount;
+            if (CurrentHealth > Max)
+            {
+                CurrentHealth = Max;
+            }
+        }
+        public bool IsDead()
+        {
+            // if health is below or zero ill tell the program that the character is dead.
+            return CurrentHealth <= 0;
+        }
     }
 }

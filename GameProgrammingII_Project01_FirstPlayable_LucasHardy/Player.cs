@@ -1,26 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
-    internal class Player
+    internal class Player : Character
     {
-        static char _playerIcon = 'O';
         static int _playerX;
         static int _playerY;
 
         static Map _map;
 
-        static Health _playerHealth = new Health(100, 100);
+        static Health _playerHealth = new Health(100);
 
-        public Player(Map map)
+
+        public Player(int x, int y) : base('O', x, y)
         {
-            _map = map;
+            XPos = x;
+            YPos = y;
         }
-        static void playerMovement()
+
+        public override void Attack(Character target)
+        {
+            target.TakeDamage(Damage);
+        }
+        public override void Draw()
+        {
+            if (!_playerHealth.IsDead())
+            {
+                Console.SetCursorPosition(XPos + _map._mapOffset, YPos + _map._mapOffset);
+                Console.ResetColor();
+
+                Console.SetCursorPosition(XPos + _map._mapOffset, YPos + _map._mapOffset);
+                Console.Write(Icon);
+            }
+            else
+            {
+
+            }
+        }
+        public override void Movement()
         {
 
             if (GameOver || Winstate) return;
@@ -71,7 +93,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 newY = oldY;
             }
 
-            if (newY == enemyYPos && newX == enemyXPos)
+            if (newY == enemy.YPos && newX == enemyXPos)
             {
                 playerAttack();
                 DrawEnemy();
