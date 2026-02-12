@@ -11,15 +11,26 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
     {
         private Map _map;
         private Player _player;
-        public Enemy(Map map, Player player) : base('X', 15, 15)
+        public Enemy(Map map, Player player) : base('X', 14, 14)
         {
             _map = map;
             _player = player;
             Health = new Health(100);
         }
+        public void SetPlayer(Player player)
+        {
+            _player = player;
+        }
         public override void Attack(Character target)
         {
             target.TakeDamage(Damage);
+
+            if (_player.Health.IsDead())
+            {
+                _map.RestoreMapTile(_player.XPos, _player.YPos);
+                GameManager.Gameover = true;
+                return;
+            }
         }
         public override void Draw()
         {

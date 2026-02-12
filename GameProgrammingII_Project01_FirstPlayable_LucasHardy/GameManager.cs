@@ -36,9 +36,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
         public void InitializeGame()
         {
+            Console.SetCursorPosition(0, 0);
             _map = new Map();
+            /// I have to temporarily pass through null because enemy and player rely on eachother.
+            _enemy = new Enemy(_map, null);
             _player = new Player(_map, _enemy);
-            _enemy = new Enemy(_map, _player);
+
+            _enemy.SetPlayer(_player);
 
             _map.DisplayMap();
             _player.Draw();

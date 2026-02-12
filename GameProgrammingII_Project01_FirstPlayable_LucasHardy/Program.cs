@@ -43,18 +43,18 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 }
                 else
                 {
-                    if (_gameManager.Enemy.Health.IsDead())
+                    if (!_gameManager.Enemy.Health.IsDead())
                     {
                         Console.ResetColor();
 
-                        Console.SetCursorPosition(0, 13);
+                        Console.SetCursorPosition(0, 18);
                         Console.Write("Enemy's Turn     ");
                         Thread.Sleep(250);
                         _gameManager.Enemy.Movement();
                     }
                     else
                     {
-                        Console.SetCursorPosition(0, 13);
+                        Console.SetCursorPosition(0, 18);
                         Console.Write("                   ");
 
                     }
@@ -64,22 +64,25 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 }
                 if (_gameManager._gameOver == true)
                 {
-                    Console.ResetColor();
-                    Console.SetCursorPosition(0, 19);
-                    Console.Write("Game Over                                        ");
-                    Console.ReadKey(true);
-                    break;
+                    GameOverDisplay();
                 }
             }
             void DisplayHUD()
             {
                 Console.ResetColor();
-                Console.SetCursorPosition(0, 15);
+                Console.SetCursorPosition(0, 18);
                 Console.Write("Player's Turn     ");
-                Console.SetCursorPosition(0, 17);
+                Console.SetCursorPosition(0, 19);
                 Console.Write($"Player's Health: {_gameManager.Player.Health.CurrentHealth}     ");
                 Console.SetCursorPosition(0, 21);
                 Console.Write("Collect the gold and defeat the enemy to win!");
+
+            }
+            void GameOverDisplay()
+            {
+                Console.ResetColor();
+                Console.Clear();
+                Console.Write("Game over pal, back to the lobby!");
 
             }
         }

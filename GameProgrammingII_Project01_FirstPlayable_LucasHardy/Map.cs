@@ -26,7 +26,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
         public int MapWidth
         {
-            get { return _mapWidth; }
+            get { return _mapLines[0].Length; }
         }
 
         public int _lavaDamage = 25;
@@ -112,7 +112,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public void RestoreMapTile(int x, int y)
         {
             char tile = _mapLines[y][x];
-            Console.SetCursorPosition(x + 1, y + 1);
+            Console.SetCursorPosition(x + _mapOffset, y + _mapOffset);
             SetForegroundColor(tile);
             Console.Write(tile);
         }
@@ -141,8 +141,10 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
             while (_placedGold < _goldToCollect)
             {
-                int xPos = random.Next(0, _mapWidth);
-                int yPos = random.Next(0, _mapHeight);
+                int xPos = random.Next(0, 15);
+                int yPos = random.Next(0, 15);
+
+
 
                 if (_mapLines[yPos][xPos] == '`' && !_goldList.Contains((xPos, yPos)))
                 {

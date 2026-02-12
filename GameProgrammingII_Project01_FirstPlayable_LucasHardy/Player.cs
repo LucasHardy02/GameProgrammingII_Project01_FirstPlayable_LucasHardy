@@ -23,6 +23,16 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public override void Attack(Character target)
         {
             target.TakeDamage(Damage);
+            if (_enemy.Health.IsDead())
+            {
+                _map.RestoreMapTile(_enemy.XPos, _enemy.YPos);
+
+                if (_map._goldCollected == _map._goldToCollect)
+                {
+                    GameManager.Winstate = true;
+                }
+                return;
+            }
         }
         public override void Draw()
         {
