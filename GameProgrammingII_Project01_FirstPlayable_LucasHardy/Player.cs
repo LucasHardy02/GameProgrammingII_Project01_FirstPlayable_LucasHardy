@@ -7,20 +7,17 @@ using System.Threading.Tasks;
 
 namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
-    internal class Player : Character
+    public class Player : Character
     {
-        static int _playerX;
-        static int _playerY;
-
-        static Map _map;
-
-        static Health _playerHealth = new Health(100);
+        Map _map;
+        Enemy _enemy;
 
 
-        public Player(int x, int y) : base('O', x, y)
+        public Player(Map map, Enemy enemy) : base('O', 0, 0)
         {
-            XPos = x;
-            YPos = y;
+            _map = map;
+            _enemy = enemy;
+            Health = new Health(100);
         }
 
         public override void Attack(Character target)
@@ -29,7 +26,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         }
         public override void Draw()
         {
-            if (!_playerHealth.IsDead())
+            if (!Health.IsDead())
             {
                 Console.SetCursorPosition(XPos + _map._mapOffset, YPos + _map._mapOffset);
                 Console.ResetColor();
@@ -45,13 +42,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public override void Movement()
         {
 
-            if (GameOver || Winstate) return;
+            if (GameManager.Gameover || GameManager.Winstate) return;
 
-            int newX = _playerX;
-            int newY = _playerY;
+            int newX = XPos;
+            int newY = YPos;
 
-            int oldX = _playerX;
-            int oldY = _playerY;
+            int oldX = XPos;
+            int oldY = YPos;
 
             ConsoleKeyInfo Direction = Console.ReadKey(true);
 
@@ -93,59 +90,59 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 newY = oldY;
             }
 
-            if (newY == enemy.YPos && newX == enemyXPos)
+            if (newY == _enemy.YPos && newX == _enemy.XPos)
             {
-                playerAttack();
-                DrawEnemy();
+                Attack(_enemy);
+                Draw();
                 return;
             }
-            else if (mapLines[newY][newX] == '░')
+            else if (_map._mapLines[newY][newX] == '░')
             {
-                playerHealth = playerHealth - lavaDamage;
+                Health.TakeDamage(_map._lavaDamage);
 
-                if (playerHealth <= 0)
+                if (Health.IsDead())
                 {
-                    GameOver = true;
+                    GameManager.Gameover = true;
                 }
 
-                if (newX >= 0 && newX < mapLines[0].Length)
+                if (newX >= 0 && newX < _map._mapLines[0].Length)
                 {
-                    playerXPos = newX;
+                    XPos = newX;
                 }
 
-                if (newY >= 0 && newY < mapLines.Length)
+                if (newY >= 0 && newY < _map._mapLines.Length)
                 {
-                    playerYPos = newY;
+                    YPos = newY;
                 }
 
-                RestoreMapTile(oldX, oldY);
+                _map.RestoreMapTile(oldX, oldY);
             }
-            else if (!(mapLines[newY][newX] == '*' ||
-                       mapLines[newY][newX] == '^' ||
-                       mapLines[newY][newX] == '~'))
+            else if (!(_map._mapLines[newY][newX] == '*' ||
+                       _map._mapLines[newY][newX] == '^' ||
+                       _map._mapLines[newY][newX] == '~'))
             {
-                for (int i = 0; i < goldList.Count; i++)
+                for (int i = 0; i < _map._goldList.Count; i++)
                 {
-                    if (newX == goldList[i].x && newY == goldList[i].y)
+                    if (newX == _map._goldList[i].x && newY == _map._goldList[i].y)
                     {
-                        goldCollected = goldCollected + 1;
-                        goldList.RemoveAt(i);
+                        _map._goldCollected += 1;
+                        _map._goldList.RemoveAt(i);
 
                         Console.SetCursorPosition(0, 17);
-                        Console.Write($"Player's Gold: {goldCollected}");
+                        Console.Write($"Player's Gold: {_map._goldCollected}");
 
-                        if (goldCollected == 5 && enemy1Health <= 0)
+                        if (_map._goldCollected == 5 && _enemy.Health.IsDead())
                         {
-                            Winstate = true;
+                            GameManager.Winstate = true;
                         }
 
                         break;
                     }
                 }
 
-                playerXPos = newX;
-                playerYPos = newY;
-                RestoreMapTile(oldX, oldY);
+                XPos = newX;
+                YPos = newY;
+                _map.RestoreMapTile(oldX, oldY);
             }
             else
             {
@@ -153,7 +150,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 newY = oldY;
             }
 
-            DrawPlayer();
+            Draw();
         }
     }
 }

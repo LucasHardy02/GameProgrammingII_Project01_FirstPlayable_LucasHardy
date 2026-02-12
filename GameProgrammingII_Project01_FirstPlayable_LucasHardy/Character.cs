@@ -25,11 +25,9 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             XPos += x;
             YPos += y;
         }
-
         public abstract void Attack(Character target);
         public abstract void Draw();
         public abstract void Movement();
-
         protected Character(char icon, int x, int y)
         {
             Icon = icon;

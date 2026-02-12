@@ -7,28 +7,23 @@ using System.Xml;
 
 namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 {
-    internal class Enemy : Character
+    public class Enemy : Character
     {
-        Health _enemyHealth = new Health(100);
-        Map _map;
-        Player player;
-        GameManager _gameManager;
-
-
-        public Enemy(int x, int y) : base('X', x, y)
+        private Map _map;
+        private Player _player;
+        public Enemy(Map map, Player player) : base('X', 15, 15)
         {
-            XPos = x;
-            YPos = y;
+            _map = map;
+            _player = player;
+            Health = new Health(100);
         }
         public override void Attack(Character target)
         {
             target.TakeDamage(Damage);
         }
-
         public override void Draw()
         {
-
-            if (!_enemyHealth.IsDead())
+            if (!Health.IsDead())
             {
                 Console.SetCursorPosition(XPos + _map._mapOffset, YPos + _map._mapOffset);
                 Console.ResetColor();
@@ -45,18 +40,18 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public override void Movement()
         {
             {
-                if (GameOver || Winstate)
+                if (GameManager.Gameover || GameManager.Winstate)
                 {
                     return;
                 }
 
-                if (_enemyHealth.IsDead())
+                if (Health.IsDead())
                 {
                     return;
                 }
 
-                int targetX = player.XPos - XPos;
-                int targetY = player.YPos - YPos;
+                int targetX = _player.XPos - XPos;
+                int targetY = _player.YPos - YPos;
 
                 int newXPos = XPos;
                 int newYPos = YPos;
@@ -90,24 +85,24 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
                 }
 
-                if (newXPos == player.XPos && newYPos == player.YPos)
+                if (newXPos == _player.XPos && newYPos == _player.YPos)
                 {
-                    Attack(player);
-                    player.Draw();
+                    Attack(_player);
+                    _player.Draw();
                     return;
 
                 }
                 else if (_map._mapLines[newYPos][newXPos] == '░')
                 {
-                    _enemyHealth.TakeDamage(_map._lavaDamage);
+                    Health.TakeDamage(_map._lavaDamage);
 
-                    if (_enemyHealth.IsDead())
+                    if (Health.IsDead())
                     {
                         _map.RestoreMapTile(XPos, YPos);
 
-                        if (_map._goldCount == 5)
+                        if (_map._goldCollected == 5)
                         {
-                            _gameManager.Winstate = true;
+                            GameManager.Winstate = true;
                         }
                         return;
                     }
@@ -121,7 +116,11 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
 
                 }
-                else if (!(_map._mapLines[newYPos][newXPos] == '*' || (_map.mapLines[newYPos][newXPos] == '^' || (_map.mapLines[newYPos][newXPos] == '~'))
+                else if (!(
+                    _map._mapLines[newYPos][newXPos] == '*' || 
+                    _map._mapLines[newYPos][newXPos] == '^' || 
+                    _map._mapLines[newYPos][newXPos] == '~'
+                    ))
                 {
                     _map.RestoreMapTile(oldXPos, oldYPos);
                     XPos = newXPos;
@@ -130,10 +129,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     return;
 
                 }
-
                 return;
-
-
             }
         }
     }
