@@ -11,8 +11,8 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public Health Health { get; protected set; }
         public int Damage { get; set; }
 
-        public int XPos { get; protected set; }
-        public int YPos { get; protected set; }
+        public int XPos { get;set; }
+        public int YPos { get; set; }
 
         public char Icon { get; protected set; }
 

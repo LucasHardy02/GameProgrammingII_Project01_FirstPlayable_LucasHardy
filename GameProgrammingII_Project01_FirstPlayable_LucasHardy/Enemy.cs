@@ -16,6 +16,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             _map = map;
             _player = player;
             Health = new Health(100);
+            Damage = 25;
         }
         public void SetPlayer(Player player)
         {

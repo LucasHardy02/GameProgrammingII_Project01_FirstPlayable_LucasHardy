@@ -111,10 +111,20 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         }
         public void RestoreMapTile(int x, int y)
         {
-            char tile = _mapLines[y][x];
             Console.SetCursorPosition(x + _mapOffset, y + _mapOffset);
-            SetForegroundColor(tile);
-            Console.Write(tile);
+            if (_goldList.Any(goldInstance => goldInstance.x == x && goldInstance.y == y))
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write(_goldIcon);
+            }
+            else
+            {
+                // 2. If no gold, draw the original tile from the file
+                char tile = _mapLines[y][x];
+                SetForegroundColor(tile);
+                Console.Write(tile);
+            }
+
         }
 
         public void DrawGold()
@@ -128,7 +138,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             Console.ResetColor();
         }
 
-        public void AddGoldToGame()
+        public void AddGoldToGame(List<Enemy> enemies)
         {
             /// First checks to see if tile is valid for a coin (If it's grass and no other coin spawned on that tilr.) 
             /// then picks a random x and y variable that is less than 
@@ -141,12 +151,14 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
             while (_placedGold < _goldToCollect)
             {
-                int xPos = random.Next(0, 15);
-                int yPos = random.Next(0, 15);
+                int xPos = random.Next(0, MapWidth);
+                int yPos = random.Next(0, MapHeight);
 
+                bool isGrass = _mapLines[yPos][xPos] == '`';
+                bool goldAlreadyThere = _goldList.Contains((xPos, yPos));
+                bool enemyThere = enemies.Any(enemyInstance => enemyInstance.XPos == xPos && enemyInstance.YPos == yPos);
 
-
-                if (_mapLines[yPos][xPos] == '`' && !_goldList.Contains((xPos, yPos)))
+                if (isGrass && !goldAlreadyThere && !enemyThere)
                 {
                     _goldList.Add((xPos, yPos));
                     _placedGold++;

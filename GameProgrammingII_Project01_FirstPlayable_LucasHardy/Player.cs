@@ -10,22 +10,22 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
     public class Player : Character
     {
         Map _map;
-        Enemy _enemy;
+        private List<Enemy> _enemies;
 
-
-        public Player(Map map, Enemy enemy) : base('O', 0, 0)
+        public Player(Map map, List<Enemy> enemies) : base('O', 0, 0)
         {
             _map = map;
-            _enemy = enemy;
+            _enemies = enemies;
             Health = new Health(100);
+            Damage = 50;
         }
 
         public override void Attack(Character target)
         {
             target.TakeDamage(Damage);
-            if (_enemy.Health.IsDead())
+            if (target.Health.IsDead())
             {
-                _map.RestoreMapTile(_enemy.XPos, _enemy.YPos);
+                _map.RestoreMapTile(target.XPos,target.YPos);
 
                 if (_map._goldCollected == _map._goldToCollect)
                 {
@@ -64,22 +64,33 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
             if (Direction.Key == ConsoleKey.W)
             {
-                newY = newY - 1;
+                newY--;
             }
 
             if (Direction.Key == ConsoleKey.S)
             {
-                newY = newY + 1;
+                newY++;
             }
 
             if (Direction.Key == ConsoleKey.D)
             {
-                newX = newX + 1;
+                newX++;
             }
 
             if (Direction.Key == ConsoleKey.A)
             {
-                newX = newX - 1;
+                newX--;
+            }
+
+            foreach (Enemy enemyInstance in _enemies)
+            {
+                /// if the enemy isn't dead and we try to go to their position, Damage them and do not move.
+                if (!enemyInstance.Health.IsDead() && newX == enemyInstance.XPos && newY == enemyInstance.YPos)
+                {
+                    Attack(enemyInstance);
+                    Draw();
+                    return;
+                }
             }
 
             if (newX >= _map.MapWidth)
@@ -100,12 +111,6 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 newY = oldY;
             }
 
-            if (newY == _enemy.YPos && newX == _enemy.XPos)
-            {
-                Attack(_enemy);
-                Draw();
-                return;
-            }
             else if (_map._mapLines[newY][newX] == '░')
             {
                 Health.TakeDamage(_map._lavaDamage);
@@ -125,7 +130,6 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     YPos = newY;
                 }
 
-                _map.RestoreMapTile(oldX, oldY);
             }
             else if (!(_map._mapLines[newY][newX] == '*' ||
                        _map._mapLines[newY][newX] == '^' ||
@@ -140,19 +144,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
 
                         Console.SetCursorPosition(0, 17);
                         Console.Write($"Player's Gold: {_map._goldCollected}");
-
-                        if (_map._goldCollected == 5 && _enemy.Health.IsDead())
-                        {
-                            GameManager.Winstate = true;
-                        }
+                        newX = oldX;
+                        newY = oldY;
 
                         break;
                     }
                 }
 
-                XPos = newX;
-                YPos = newY;
-                _map.RestoreMapTile(oldX, oldY);
             }
             else
             {
@@ -160,6 +158,13 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 newY = oldY;
             }
 
+            XPos = newX;
+            YPos = newY;
+
+            if (XPos != oldX || YPos != oldY)
+            {
+                _map.RestoreMapTile(oldX, oldY);
+            }
             Draw();
         }
     }

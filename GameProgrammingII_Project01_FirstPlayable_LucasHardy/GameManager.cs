@@ -9,27 +9,20 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
     public class GameManager
     {
         private Map _map;
+        public Map Map => _map;
         private Player _player;
-        private Enemy _enemy;
+        private List<Enemy> _enemies = new List<Enemy>();
+        public List<Enemy> Enemies => _enemies;
         public Player Player
         {
             get { return _player; }
         }
 
-        public Enemy Enemy
-        {
-            get { return _enemy; }
-        }
         public bool _gameOver = false;
         public bool _winstate = false;
         public bool _playersTurn = true;
         public bool _gameRunning = true;
 
-
-        public int _playerXSpawnPos = 0;
-        public int _playerYSpawnPos = 0;
-        public int _enemyXSpawnPos = 26;
-        public int _enemyYSpawnPos = 10;
         public static bool Gameover { get; internal set; }
         public static bool Winstate { get; internal set; }
     
@@ -39,15 +32,28 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             Console.SetCursorPosition(0, 0);
             _map = new Map();
             /// I have to temporarily pass through null because enemy and player rely on eachother.
-            _enemy = new Enemy(_map, null);
-            _player = new Player(_map, _enemy);
+            _enemies = new List<Enemy>();
+            _enemies.Add(new Enemy(_map,null) { XPos = 14, YPos = 14 });
+            _enemies.Add(new Enemy(_map, null) { XPos = 10, YPos = 14 });
 
-            _enemy.SetPlayer(_player);
+
+
+
+            _player = new Player(_map, _enemies);
+
+
+            foreach (Enemy enemyInstance in _enemies)
+            {
+                enemyInstance.SetPlayer(_player);
+            }
 
             _map.DisplayMap();
             _player.Draw();
-            _enemy.Draw();
-            _map.AddGoldToGame();
+            foreach (Enemy enemyInstance in _enemies)
+            {
+                enemyInstance.Draw();
+            }
+            _map.AddGoldToGame(_enemies);
             _map.DrawGold();
             _gameRunning = true;
         }

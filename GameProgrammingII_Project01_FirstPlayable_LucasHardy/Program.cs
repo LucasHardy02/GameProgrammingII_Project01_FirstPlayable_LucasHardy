@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -16,52 +17,69 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             Player _player;
             Enemy _enemy;
             GameManager _gameManager = new GameManager();
-            Map _map = new Map();
-
-            _map._goldList = new List<(int x, int y)>();
-
-            _map.AddGoldToGame();
+            
             _gameManager.InitializeGame();
+
+            _gameManager.Map._goldList = new List<(int x, int y)>();
+
+            _gameManager.Map.AddGoldToGame(_gameManager.Enemies);
 
             while (_gameManager._gameOver == false)
             {
-
+                if (_gameManager.Enemies.All(e => e.Health.IsDead()) && _gameManager.Map._goldCollected >= _gameManager.Map._goldToCollect)
+                {
+                    _gameManager._winstate = true;
+                }
                 if (_gameManager._winstate == true)
                 {
-                    Console.ResetColor();
-                    Console.SetCursorPosition(0, 19);
+                    Console.Clear();
                     Console.Write("You win!                                         ");
                     break;
 
                 }
                 else if (_gameManager._playersTurn)
                 {
-                    DisplayHUD();
-                    Thread.Sleep(250);
-                    _gameManager.Player.Movement();
-                    _gameManager._playersTurn = false;
-                }
-                else
-                {
-                    if (!_gameManager.Enemy.Health.IsDead())
+                    if (!_gameManager.Player.Health.IsDead())
                     {
-                        Console.ResetColor();
-
-                        Console.SetCursorPosition(0, 18);
-                        Console.Write("Enemy's Turn     ");
-                        Thread.Sleep(250);
-                        _gameManager.Enemy.Movement();
+                        DisplayHUD();
+                        _gameManager.Player.Movement();
+                        _gameManager._playersTurn = false;
                     }
                     else
                     {
-                        Console.SetCursorPosition(0, 18);
-                        Console.Write("                   ");
-
+                        _gameManager._gameOver = true;
+                        GameOverDisplay();
                     }
 
+                }
+                else
+                {
+                    foreach (Enemy enemyInstance in _gameManager.Enemies)
+                    {
+                        if (!enemyInstance.Health.IsDead())
+                        {
+                            Console.ResetColor();
+                            Console.SetCursorPosition(0, 18);
+                            Console.Write("Enemies Turn     ");
+                            Thread.Sleep(150);
+                            enemyInstance.Movement();
+
+                            if (enemyInstance.Health.IsDead())
+                            {
+                                _gameManager.Map.RestoreMapTile(enemyInstance.XPos, enemyInstance.YPos);
+                            }
+                        }
+                        else
+                        {
+                            Console.SetCursorPosition(0, 18);
+                            Console.Write("                   ");
+
+                        }
+                    }
                     _gameManager._playersTurn = true;
 
                 }
+
                 if (_gameManager._gameOver == true)
                 {
                     GameOverDisplay();
