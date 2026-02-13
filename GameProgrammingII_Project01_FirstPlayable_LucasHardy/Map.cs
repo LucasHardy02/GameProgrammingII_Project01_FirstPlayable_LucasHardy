@@ -112,6 +112,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public void RestoreMapTile(int x, int y)
         {
             Console.SetCursorPosition(x + _mapOffset, y + _mapOffset);
+
             if (_goldList.Any(goldInstance => goldInstance.x == x && goldInstance.y == y))
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -124,7 +125,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 SetForegroundColor(tile);
                 Console.Write(tile);
             }
-
+            Console.ResetColor();
         }
 
         public void DrawGold()

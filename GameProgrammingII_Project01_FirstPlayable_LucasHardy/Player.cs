@@ -141,7 +141,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     {
                         _map._goldCollected += 1;
                         _map._goldList.RemoveAt(i);
-
+                        _map.RestoreMapTile(newX, newY);
                         Console.SetCursorPosition(0, 17);
                         Console.Write($"Player's Gold: {_map._goldCollected}");
                         newX = oldX;
@@ -166,6 +166,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                 _map.RestoreMapTile(oldX, oldY);
             }
             Draw();
+            Console.ResetColor();
         }
     }
 }
