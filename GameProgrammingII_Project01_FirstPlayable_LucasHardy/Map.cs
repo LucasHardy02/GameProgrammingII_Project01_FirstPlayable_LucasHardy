@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
     public class Map
     {
 
-        static string _map = "Map.txt.txt";
+        static string _map = "AlphaMap.txt";
         public string[] _mapLines = File.ReadAllLines(_map);
 
         private int _mapHeight;
@@ -35,6 +36,9 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
         public char _goldIcon = '0';
         public int _goldToCollect = 5;
         public int _goldCollected;
+
+        public char _DamageMultiplierIcon = '?';
+
 
         public void DisplayMap()
         {
@@ -133,7 +137,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             foreach (var g in _goldList)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.SetCursorPosition(g.x + 1, g.y + 1);
+                Console.SetCursorPosition(g.x, g.y);
                 Console.Write(_goldIcon);
             }
             Console.ResetColor();
@@ -165,8 +169,16 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     _placedGold++;
                 }
             }
+        }
 
-
+        public void DrawDmgMultiplier()
+        {
+            int xPos = 28;
+            int yPos = 5;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.SetCursorPosition(xPos, yPos);
+            Console.Write(_DamageMultiplierIcon);
+            Console.ResetColor();
         }
     }
 }

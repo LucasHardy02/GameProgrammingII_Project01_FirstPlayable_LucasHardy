@@ -37,7 +37,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     break;
 
                 }
-                else if (_gameManager._playersTurn)
+                if (_gameManager._playersTurn)
                 {
                     if (!_gameManager.Player.Health.IsDead())
                     {
@@ -52,7 +52,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
                     }
 
                 }
-                else
+                else /// enemys turn
                 {
                     foreach (Enemy enemyInstance in _gameManager.Enemies)
                     {

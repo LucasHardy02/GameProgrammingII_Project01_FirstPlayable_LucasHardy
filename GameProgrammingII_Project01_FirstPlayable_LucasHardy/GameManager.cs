@@ -55,6 +55,7 @@ namespace GameProgrammingII_Project01_FirstPlayable_LucasHardy
             }
             _map.AddGoldToGame(_enemies);
             _map.DrawGold();
+            _map.DrawDmgMultiplier();
             _gameRunning = true;
         }
     }
